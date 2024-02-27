@@ -141,36 +141,30 @@ const updateUser = async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
 
-        // Hash the password with salt rounds
-        const saltRounds = 10; // You can adjust the number of salt rounds as needed
-        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-
-        // Update the user record
-        const updatedUser = await User.findByPk(userId); // Find user by primary key
+        // const saltRounds = 10; 
+        // const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+        const updatedUser = await User.findByPk(userId); 
+        console.log(updatedUser,"updatedUser")
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Update user attributes
         updatedUser.fname = userData.fname;
         updatedUser.lname = userData.lname;
         updatedUser.phonenumber = userData.phonenumber;
         updatedUser.email = userData.email;
         updatedUser.address = userData.address;
         updatedUser.dob = userData.dob;
-        updatedUser.password = hashedPassword; // Use hashed password for update
-        updatedUser.confirmPassword = hashedPassword; // Use hashed password for update
         updatedUser.gender = userData.gender;
 
-        // Save the updated user record
         await updatedUser.save();
-
         return res.status(200).json({ message: 'User updated successfully', user: updatedUser });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 
